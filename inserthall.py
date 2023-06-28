@@ -4,7 +4,8 @@ import time
 date = time.strftime('%Y-%m-%d %H:%M:%S')
 date = str(date)
 
-with open("config.json", encoding='utf-8') as fs:
+fichier_config = "/home/pi/coccapitalwatch/config.json"
+with open(fichier_config, encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
@@ -36,7 +37,7 @@ try:
     values = (nbr_jeton,date)
     db_cursor.execute(insert_query, values)
     db_connection.commit()
-    db_connection.clase()
+    db_connection.close()
 except:
     print("Erreur lors de la connexion à la base de données")
     input("Appuyez sur une touche pour quitter...")

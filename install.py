@@ -2,7 +2,8 @@ import json
 import mysql.connector
 import requests
 
-with open("config.json", encoding='utf-8') as fs:
+fichier_config = "/home/pi/coccapitalwatch/config.json"
+with open(fichier_config, encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
@@ -44,7 +45,7 @@ try:
     db_cursor = db_connection.cursor()
     db_cursor.execute(open("database.sql", "r").read())
     db_connection.commit()
-    db_connection.clase()
+    db_connection.close()
 except:
     print("Erreur lors de la connexion à la base de données")
     input("Appuyez sur une touche pour quitter...")
