@@ -27,7 +27,8 @@ SET time_zone = "+00:00";
 -- Structure de la table `depot`
 --
 
-CREATE TABLE `depot` (
+
+CREATE TABLE IF NOT EXISTS `depot` (
   `id_depot` int(11) UNSIGNED NOT NULL,
   `id_joueur` int(11) UNSIGNED NOT NULL,
   `montant` int(11) UNSIGNED NOT NULL,
@@ -40,12 +41,24 @@ CREATE TABLE `depot` (
 -- Structure de la table `joueurs`
 --
 
-CREATE TABLE `joueurs` (
+CREATE TABLE IF NOT EXISTS `joueurs` (
   `id_joueur` int(11) UNSIGNED NOT NULL,
   `pseudo_joueur` varchar(55) NOT NULL,
   `tag_joueur` varchar(55) NOT NULL,
   `contributions_joueur` int(11) UNSIGNED NOT NULL,
   `date_dernier_depot_joueur` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `halls`
+--
+
+CREATE TABLE IF NOT EXISTS `halls` (
+  `id_hall` int(11) UNSIGNED NOT NULL,
+  `somme_hall` int(11) UNSIGNED NOT NULL,
+  `date_hall` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -66,6 +79,12 @@ ALTER TABLE `joueurs`
   ADD PRIMARY KEY (`id_joueur`);
 
 --
+-- Index pour la table `halls`
+--
+ALTER TABLE `halls`
+  ADD PRIMARY KEY (`id_hall`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -74,6 +93,12 @@ ALTER TABLE `joueurs`
 --
 ALTER TABLE `depot`
   MODIFY `id_depot` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `halls`
+--
+ALTER TABLE `halls`
+  MODIFY `id_hall` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `joueurs`

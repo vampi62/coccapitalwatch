@@ -1,0 +1,9 @@
+{
+    "bdip" : "192.168.0.0",
+    "bdport" : "3306",
+    "bduser" : "cocuser",
+    "bdpass" : "cocpass",
+    "bdname" : "cocdbname",
+    "clan_tag" : "tag_de_votre_clan (#xxxxx)",
+    "api_key" : "api_key"
+}

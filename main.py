@@ -1,18 +1,26 @@
 import requests
 import json
 import mysql.connector
-import time    
+import time
 date = time.strftime('%Y-%m-%d %H:%M:%S')
 date = str(date)
-clan_tag = "tag_de_votre_clan (#xxxxx)"
-api_key = "api_key"
+
+with open("config.json", encoding='utf-8') as fs:
+      try:
+        data = json.load(fs) # lecture json
+        fs.close()
+      except:
+        fs.close()
+        print("Erreur lors de la lecture du fichier config.json")
+        exit()
 
 # Informations de connexion à la base de données MariaDB
 db_config = {
-    "user": "dbuser",
-    "password": "dbpassword",
-    "host": "192.168.0.0",
-    "database": "dbname"
+    "user": data['bduser'],
+    "port": data['bdport'],
+    "password":  data['bdpass'],
+    "host":  data['bdip'],
+    "database":  data['bdname']
 }
 db_connection = mysql.connector.connect(**db_config)
 db_cursor = db_connection.cursor()
@@ -40,7 +48,7 @@ def get_member_info(player_tag, api_key):
     return data
 
 
-clan_info = get_clan_info(clan_tag, api_key)
+clan_info = get_clan_info(data['clan_tag'], data['api_key'])
 db_cursor.execute("SELECT * FROM joueurs")
 dbplayer = db_cursor.fetchall()
 for player in dbplayer:
@@ -56,7 +64,7 @@ for player in dbplayer:
 db_connection.commit()
 
 for member in clan_info["memberList"]:
-    member_info = get_member_info(member["tag"], api_key)
+    member_info = get_member_info(member["tag"], data['api_key'])
     #verifier si le joueur existe déjà dans la base de données
     #si oui, mettre à jour les informations
     #si non, l'ajouter
