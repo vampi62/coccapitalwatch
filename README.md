@@ -81,3 +81,5 @@ python /home/pi/coccapitalwatch/insertall.py
 ```
 cette dernière commande est à exécuter régulièrement pour bien suivre tout changement dans le hall.
 
+(ajout)
+le fichier "correspondance.py" permet de remonter comparer la difference entre 2 relever du hall pour trouver les depots responsable de ce changement.
