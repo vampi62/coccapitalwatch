@@ -1,9 +1,9 @@
-import json
 import mysql.connector
+import json
+import os
 import requests
-
-fichier_config = "/home/pi/coccapitalwatch/config.json"
-with open(fichier_config, encoding='utf-8') as fs:
+chemin = os.getcwd()
+with open(chemin + "/config.json", encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()

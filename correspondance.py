@@ -1,12 +1,13 @@
 import mysql.connector
-import time
 import json
+import os
+import time
+chemin = os.getcwd()
 date = time.strftime('%Y-%m-%d %H:%M:%S')
 date = str(date)
 target_sum = 0
 numbers_list = []
-fichier_config = "/home/pi/coccapitalwatch/config.json"
-with open(fichier_config, encoding='utf-8') as fs:
+with open(chemin + "/config.json", encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()

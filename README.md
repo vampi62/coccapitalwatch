@@ -53,7 +53,7 @@ FLUSH PRIVILEGES;
 exit
 ```
 
-- completer le fichier config.json et copier son chemin complet dans les variables "fichier_config" de chaque fichier python du projet)
+- completer le fichier config.json
 
 3) mise en route
 - executer le fichier install.py
