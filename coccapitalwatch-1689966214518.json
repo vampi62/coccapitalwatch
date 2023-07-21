@@ -21,6 +21,7 @@
       }
     ]
   },
+  "description": "",
   "editable": false,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -31,7 +32,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "qLZymwXVk"
+        "uid": "${serveursql}"
       },
       "fieldConfig": {
         "defaults": {
@@ -40,7 +41,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -68,7 +71,9 @@
       },
       "id": 2,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -83,13 +88,13 @@
           }
         ]
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "10.0.2",
       "targets": [
         {
           "dataset": "coc",
           "datasource": {
             "type": "mysql",
-            "uid": "qLZymwXVk"
+            "uid": "${serveursql}"
           },
           "editorMode": "code",
           "format": "table",
@@ -145,7 +150,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "qLZymwXVk"
+        "uid": "${serveursql}"
       },
       "fieldConfig": {
         "defaults": {
@@ -154,7 +159,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -182,7 +189,9 @@
       },
       "id": 3,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -197,13 +206,13 @@
           }
         ]
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "10.0.2",
       "targets": [
         {
           "dataset": "coc",
           "datasource": {
             "type": "mysql",
-            "uid": "qLZymwXVk"
+            "uid": "${serveursql}"
           },
           "editorMode": "code",
           "format": "table",
@@ -260,7 +269,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "qLZymwXVk"
+        "uid": "${serveursql}"
       },
       "fieldConfig": {
         "defaults": {
@@ -269,7 +278,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -297,7 +308,9 @@
       },
       "id": 4,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -312,13 +325,13 @@
           }
         ]
       },
-      "pluginVersion": "9.3.1",
+      "pluginVersion": "10.0.2",
       "targets": [
         {
           "dataset": "coc",
           "datasource": {
             "type": "mysql",
-            "uid": "qLZymwXVk"
+            "uid": "${serveursql}"
           },
           "editorMode": "builder",
           "format": "table",
@@ -372,11 +385,31 @@
       "type": "table"
     }
   ],
-  "schemaVersion": 37,
+  "refresh": "",
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "MySQL",
+          "value": "MySQL"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "serveursql",
+        "options": [],
+        "query": "mysql",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
@@ -386,6 +419,6 @@
   "timezone": "",
   "title": "coccapitalwatch",
   "uid": "3JPZZwu4k",
-  "version": 10,
+  "version": 4,
   "weekStart": ""
 }

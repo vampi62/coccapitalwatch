@@ -43,8 +43,7 @@ except:
 try:
     db_connection = mysql.connector.connect(**db_config)
     db_cursor = db_connection.cursor()
-    db_cursor.execute(open("database.sql", "r").read())
-    db_connection.commit()
+    db_cursor.execute(open("coc.sql", "r").read())
     db_connection.close()
 except:
     print("Erreur lors de la connexion à la base de données")

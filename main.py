@@ -84,8 +84,8 @@ for member in clan_info["memberList"]:
             values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date)
             db_cursor.execute(insert_query, values)
     else:
-        insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur, date_dernier_depot_joueur) VALUES (%s, %s, %s, %s)"
-        values = (member["name"], member["tag"], member_info["clanCapitalContributions"], date)
+        insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur) VALUES (%s, %s, %s)"
+        values = (member["name"], member["tag"], member_info["clanCapitalContributions"])
         print("ADD")
         print(values)
         db_cursor.execute(insert_query, values)
