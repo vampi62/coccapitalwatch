@@ -10,22 +10,63 @@ prérequis
 - une cle api clash of clan (gratuits) https://developer.clashofclans.com/#/
 - l'id du clan à surveillez
 
+# menu
 
-installation sur un poste windows
+* [installation sur windows](#windows)
+* [installation sur linux](#linux)
+
+# windows
 
 1) suivez les procedures d'installation des logiciels ci-dessous
-https://www.python.org/downloads/windows/
-https://dev.mysql.com/downloads/installer/
-https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/
+selectionner les installer pas d'embedded
+
+- telecharger le repo git https://github.com/vampi62/coccapitalwatch.git
+
+- https://www.python.org/downloads/windows/
+(lancer le programme et avant de cliquer sur install cocher les cases "use admin" et "add to PATH")
+
+- https://dev.mysql.com/downloads/installer/
+(mysql server only --> next jusqu'a install (changer le root password))
+
+- https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/
 
 2) ouvrez un cmd
-module requis par python
+installer les modules requis par python
 ```sh
 pip install requests
 pip install mysql-connector-python
 ```
 
-installation sur un poste linux
+dans la recherche windows ouvrer "mysqlcommande line client"
+après avoir entrer le mot de passe root :
+(changer "password")
+```sh
+CREATE DATABASE coc;
+CREATE USER 'coc'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL ON coc.* TO 'coc'@'localhost';
+FLUSH PRIVILEGES;
+exit
+```
+
+- completer le fichier config.json
+
+lancer l'installation de la base (changer le répertoire si besoin)
+```sh
+cd C:/Téléchargements/coccapitalwatch/
+python C:/Téléchargements/coccapitalwatch/install.py
+```
+
+- creer une tache planifier
+
+allez dans le planificateur de tache
+creer une nouvelle tache avec une execution régulière
+![declencheur](https://github.com/vampi62/coccapitalwatch/assets/104321401/bab9dd4c-f75e-41b3-aa35-880a9911fd0a)
+
+ajouter l'action vers le script main ! executer dans le dossier du fichier main
+![action](https://github.com/vampi62/coccapitalwatch/assets/104321401/b76b3a3d-ed74-4ee4-bbdf-bbbbd563b330)
+
+
+# linux
 ```sh
 sudo git clone https://github.com/vampi62/coccapitalwatch.git
 cd coccapitalwatch
@@ -42,45 +83,24 @@ sudo apt install mariadb-server
 https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/
 ```
 
-
-
-
-configuration sur linux ou windows
-
-
-1) configuration des services
-
-- base de données
-(si vous n'êtes pas très à l’aise avec les commande, vous pouvez install phpmyadmin pour administrer votre base)
+configurer la base de données
 ```sh
 mysql -h localhost -u root -p
-CREATE DATABASE coc
+CREATE DATABASE coc;
 CREATE USER 'coc'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL ON coc.* TO 'coc'@'localhost';
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('NouveauMotDePasse');
 FLUSH PRIVILEGES;
 exit
 ```
 
 - completer le fichier config.json
 
-2) mise en route
-- executer le fichier install.py
-
-pour linux
+lancer l'installation de la base (changer le répertoire si besoin)
 ```sh
 cd ~/coccapitalwatch/
 python ~/coccapitalwatch/install.py
 ```
-
-pour windows
-```sh
-cd C:/Téléchargements/coccapitalwatch/
-python C:/Téléchargements/coccapitalwatch/install.py
-```
-
-
-dans grafana importer le dashboard coccapitalwatch-xxxx.json
-creer un utilisateur qui a des acces vue uniquement si vous compter laisser un acces publique
 
 - installer la tache planifier
 crontab (remplacer "pi" par le nom de l'utilisateur qui stock le projet) (linux uniquement)
@@ -92,13 +112,25 @@ sudo crontab -e
 - executer : "su pi -c "python /home/pi/coccapitalwatch/main.py"
 (verification du fonctionnement du script comme vue au-dessus remplacer pi)
 
-allez dans le planificateur de tache
-creer une nouvelle tache avec une execution régulière
-![declencheur](https://github.com/vampi62/coccapitalwatch/assets/104321401/bab9dd4c-f75e-41b3-aa35-880a9911fd0a)
 
-ajouter l'action vers le script main ! executer dans le dossier du fichier main
-![action](https://github.com/vampi62/coccapitalwatch/assets/104321401/b76b3a3d-ed74-4ee4-bbdf-bbbbd563b330)
+# grafana
 
+connecter vous a grafana :
+naviagateur entrer localhost:3000
+
+si le service fonctionne un login vous sera demander (admin:admin)
+
+
+en bas a gauche aller dans administration > source de données
+
+creer une source MYSQL et rempliser les informations de connexion
+![sql](https://github.com/vampi62/coccapitalwatch/assets/104321401/d6cfc9a9-df56-428f-9e00-a20069dbbe42)
+
+valider sur "save & test"
+
+dans dashboard cliquer sur "new" > import
+
+importer le dashboard coccapitalwatch-xxxx.json
 
 (la partie ci-dessous nécessite un suivie manuelle régulier, si vous voulez juste suivre les dépôts comme ce que faisait certain bot discord vous pouvez ignorer la suite)
 
