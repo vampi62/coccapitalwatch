@@ -1,6 +1,6 @@
 # coccapitalwatch
 
-Vous en avez marre de cette situation ou 3 gus de votre clan rust le hall de la capitale alors votre capitale est prema et se fait démonter chaque week-end
+Vous en avez marre de cette situation ou 3 gus de votre clan rush le hall de la capitale alors votre capitale est prema et se fait démonter chaque week-end
 
 Surveillez les donations de gemmes dans la capitale de clan,
 Les changements sont enregistrés en base, il ne vous restera plus qu'a noté le nbr de gemme du hall, et s’il change vous n'aurai plus qu'à rechercher dans la db pour trouver une correspondance
@@ -131,6 +131,10 @@ valider sur "save & test"
 dans dashboard cliquer sur "new" > import
 
 importer le dashboard coccapitalwatch-xxxx.json
+changer le temps affichage sur UTC
+![utc](https://github.com/vampi62/coccapitalwatch/assets/104321401/20367ef6-ecbb-4f06-824e-f5d276e442c7)
+
+
 
 (la partie ci-dessous nécessite un suivie manuelle régulier, si vous voulez juste suivre les dépôts comme ce que faisait certain bot discord vous pouvez ignorer la suite)
 
