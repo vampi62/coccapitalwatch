@@ -76,5 +76,5 @@ if result is None:
     print("Aucune combinaison trouvée pour atteindre la somme cible.")
 else:
     print("Combinaison trouvée :", result)
-print("atention : les petites sommes rondes peuvent correspondre exemple un 450 et un 550 peuvent être sortie par le programme alors qu'il pourrait s'agir d'un 1000")
+print("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
 input("Appuyez sur une touche pour quitter...")
