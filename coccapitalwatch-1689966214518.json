@@ -218,7 +218,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT coc.joueurs.pseudo_joueur as pseudo, coc.depot.montant, coc.depot.date_depot as \"date de depot\" FROM coc.joueurs INNER JOIN coc.depot ON coc.joueurs.id_joueur = coc.depot.id_joueur ORDER BY coc.depot.date_depot DESC",
+          "rawSql": "SELECT coc.joueurs.pseudo_joueur as pseudo, coc.depot.montant, coc.depot.date_depot as \"date de depot\" FROM coc.joueurs LEFT JOIN coc.depot ON coc.joueurs.id_joueur = coc.depot.id_joueur ORDER BY coc.depot.date_depot DESC",
           "refId": "B",
           "sql": {
             "columns": [

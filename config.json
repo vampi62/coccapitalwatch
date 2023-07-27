@@ -5,5 +5,7 @@
     "bdpass" : "password",
     "bdname" : "coc",
     "clan_tag" : "tag_de_votre_clan (#xxxxx)",
-    "api_key" : "api_key"
+    "api_key" : "api_key",
+    "discord_token" : "",
+    "discord_channel" : ""
 }
