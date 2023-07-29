@@ -14,7 +14,8 @@ prérequis
 
 * [installation sur windows](#windows)
 * [installation sur linux](#linux)
-
+* [installation de grafana](#grafana)
+* [installation avec bot discord](#discord)
 # windows
 
 1) suivez les procedures d'installation des logiciels ci-dessous
@@ -134,17 +135,22 @@ importer le dashboard coccapitalwatch-xxxx.json
 changer le temps affichage sur UTC
 ![utc](https://github.com/vampi62/coccapitalwatch/assets/104321401/20367ef6-ecbb-4f06-824e-f5d276e442c7)
 
+# discord
+
+dans le panel dev de discord creer une application
+https://discord.com/developers/applications
+
+dans le menu de gauche creer un bot
+ajouter le droit "message content intent"
 
 
 (la partie ci-dessous nécessite un suivie manuelle régulier, si vous voulez juste suivre les dépôts comme ce que faisait certain bot discord vous pouvez ignorer la suite)
 
 - executer inserthall.py pour ajouter une messure de l'etat du hall --> dans le jeu recuperer le nombre de gemmes investie dans le hall entrer cette valeur dans la zone de saisie
+apres avoir inserer cette valeur en base le script va comparer la difference entre cette valeur et la dernière enregistrer avant pour trouver les depots responsable de ce changement.
 ```sh
 python /home/pi/coccapitalwatch/insertall.py
 ```
-cette dernière commande est à exécuter régulièrement pour bien suivre tout changement dans le hall.
-
-le fichier "correspondance.py" permet de remonter comparer la difference entre 2 relever du hall pour trouver les depots responsable de ce changement.
 exemple dans les image ci-joint.
 ![2hall](https://github.com/vampi62/coccapitalwatch/assets/104321401/184a5306-998f-4e2c-90ec-5b0c638399af)
 ![correspondance](https://github.com/vampi62/coccapitalwatch/assets/104321401/1936c7bb-bc0b-45b4-ad74-8fe62286b9af)

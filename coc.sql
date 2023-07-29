@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `depot` (
   `id_depot` int(11) UNSIGNED NOT NULL,
-  `id_joueur` int(11) UNSIGNED NULL,
+  `id_joueur` int(11) UNSIGNED NOT NULL,
   `montant` int(11) UNSIGNED NOT NULL,
   `date_depot` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `depot` (
 CREATE TABLE IF NOT EXISTS `joueurs` (
   `id_joueur` int(11) UNSIGNED NOT NULL,
   `pseudo_joueur` varchar(55) NOT NULL,
-  `tag_joueur` varchar(55) NOT NULL,
+  `tag_joueur` varchar(55) NULL,
   `contributions_joueur` int(11) UNSIGNED NOT NULL,
   `date_dernier_depot_joueur` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -114,7 +114,7 @@ ALTER TABLE `joueurs`
 -- Contraintes pour la table `depot`
 --
 ALTER TABLE `depot`
-  ADD CONSTRAINT `depot_joueur_FK0` FOREIGN KEY (`id_joueur`) REFERENCES `joueurs` (`id_joueur`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `depot_joueur_FK0` FOREIGN KEY (`id_joueur`) REFERENCES `joueurs` (`id_joueur`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

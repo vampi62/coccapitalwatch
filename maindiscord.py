@@ -6,7 +6,6 @@ import time
 import asyncio
 import discord
 chemin = os.getcwd()
-date = str(time.strftime('%Y-%m-%d %H:%M:%S'))
 
 with open(chemin + "/config.json", encoding='utf-8') as fs:
       try:
@@ -26,10 +25,9 @@ db_config = {
     "database":  data['bdname']
 }
 def connectsql():
-    global db_connection
-    global db_cursor
     db_connection = mysql.connector.connect(**db_config)
     db_cursor = db_connection.cursor()
+    return db_connection,db_cursor
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -62,33 +60,25 @@ async def sendmessage(message,returnmessage):
         await message.channel.send(msg)
 
 def inserthall(nbr_jeton):
-    global db_connection
-    global db_cursor
-    try:
-        db_connection.is_connected()
-    except:
-        connectsql()
+    db_connection,db_cursor = connectsql()
+    date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
     if not nbr_jeton.isdigit():
         print("Erreur, le nombre de jeton doit être un nombre")
         return ["Erreur, le nombre de jeton doit être un nombre"]
     try:
         insert_query = "INSERT INTO halls (somme_hall, date_hall) VALUES (%s, %s)"
-        values = (nbr_jeton,date)
+        values = (nbr_jeton,date_insert)
         db_cursor.execute(insert_query, values)
         db_connection.commit()
     except:
         print("Erreur lors de la connexion à la base de données")
         return ["Erreur lors de la connexion à la base de données"]
     print("donnée mise à jour avec succès !")
+    db_connection.close()
     return ["donnée mise à jour avec succès !"]
 
 def correspondance():
-    global db_connection
-    global db_cursor
-    try:
-        db_connection.is_connected()
-    except:
-        connectsql()
+    db_connection,db_cursor = connectsql()
     returnmessage = []
     target_sum = 0
     numbers_list = []
@@ -130,6 +120,7 @@ def correspondance():
         print("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
         returnmessage.append("Combinaison trouvée : " + str(result))
         returnmessage.append("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
+    db_connection.close()
     return returnmessage
 
 def get_clan_info(clan_tag, api_key):
@@ -156,19 +147,18 @@ def get_member_info(player_tag, api_key):
 
 async def insert_periodically():
     while True:
-        await your_function_to_run_periodically()
-        await asyncio.sleep(300)
+        await sync_clans()
+        await asyncio.sleep(120)
 
-async def your_function_to_run_periodically():
-    global db_connection
-    global db_cursor
-    try:
-        db_connection.is_connected()
-    except:
-        connectsql()
+async def sync_clans():
+    db_connection,db_cursor = connectsql()
     returnmessage = []
+    date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
+    channel = bot.get_channel(int(data['discord_channel']))
+    if not channel:
+        print("Erreur, le channel discord n'est pas valide")
     clan_info = get_clan_info(data['clan_tag'], data['api_key'])
-    db_cursor.execute("SELECT * FROM joueurs")
+    db_cursor.execute("SELECT id_joueur,pseudo_joueur,tag_joueur FROM joueurs")
     dbplayer = db_cursor.fetchall()
     # supprimer les joueurs qui ne sont plus dans le clan
     for player in dbplayer:
@@ -178,12 +168,12 @@ async def your_function_to_run_periodically():
                 found = True
                 break
         if found == False:
-            print("DELETE")
-            db_cursor.execute("DELETE FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
+            print(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
+            returnmessage.append(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
+            db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
     db_connection.commit()
     # mettre à jour les informations des joueurs
     for member in clan_info["memberList"]:
-        member_status = []
         member_info = get_member_info(member["tag"], data['api_key'])
         #verifier si le joueur existe déjà dans la base de données
         #si oui, mettre à jour les informations
@@ -191,43 +181,30 @@ async def your_function_to_run_periodically():
         db_cursor.execute("SELECT * FROM joueurs WHERE tag_joueur = '" + member["tag"] + "'")
         dbplayer = db_cursor.fetchall()
         if dbplayer:
-            print(dbplayer[0])
-            member_status.append(member["name"])
             if int(member_info["clanCapitalContributions"]) != int(dbplayer[0][3]):
                 update_query = "UPDATE joueurs SET contributions_joueur = %s, date_dernier_depot_joueur = %s WHERE tag_joueur = %s"
-                values = (member_info["clanCapitalContributions"], date, member["tag"])
+                values = (member_info["clanCapitalContributions"], date_insert, member["tag"])
                 db_cursor.execute(update_query, values)
-                # ajoute une entrer dans la table depot
-                print('UPDATE')
-                print(str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])))
-                member_status.append("UPDATE")
-                member_status.append(str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])))
+                print(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
                 insert_query = "INSERT INTO depot (id_joueur, montant, date_depot) VALUES (%s, %s, %s)"
-                values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date)
+                values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date_insert)
                 db_cursor.execute(insert_query, values)
-                returnmessage.append(str(member_status))
+                returnmessage.append(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
         else:
             insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur) VALUES (%s, %s, %s)"
             values = (member["name"], member["tag"], member_info["clanCapitalContributions"])
-            print("ADD")
-            print(values)
-            member_status.append(member["name"])
-            member_status.append("ADD")
-            member_status.append("")
+            print(member["name"] + " à intégré le clan, le " + date_insert + ".")
             db_cursor.execute(insert_query, values)
-            returnmessage.append(str(member_status))
+            returnmessage.append(member["name"] + " à intégré le clan, le " + date_insert + ".")
     db_connection.commit()
-    channel = bot.get_channel(int(data['discord_channel']))
     if channel:
         for msg in returnmessage:
             print(msg)
             await channel.send(msg)
-    else:
-        print("Erreur, le channel discord n'est pas valide")
+    db_connection.close()
 
 @bot.event
 async def on_disconnect():
-    db_connection.close()
-    print('Connexion à la base de données fermée.')
+    print('Connexion perdue, tentative de reconnexion...')
 
 bot.run(data['discord_token'])

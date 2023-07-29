@@ -4,8 +4,7 @@ import os
 import requests
 import time
 chemin = os.getcwd()
-date = time.strftime('%Y-%m-%d %H:%M:%S')
-date = str(date)
+date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
 with open(chemin + "/config.json", encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
@@ -50,18 +49,18 @@ def get_member_info(player_tag, api_key):
 
 
 clan_info = get_clan_info(data['clan_tag'], data['api_key'])
-db_cursor.execute("SELECT * FROM joueurs")
+db_cursor.execute("SELECT id_joueur,pseudo_joueur,tag_joueur FROM joueurs")
 dbplayer = db_cursor.fetchall()
+# supprimer les joueurs qui ne sont plus dans le clan
 for player in dbplayer:
-    # supprimer les joueurs qui ne sont plus dans le clan
     found = False
     for member in clan_info["memberList"]:
         if member["tag"] == player[2]:
             found = True
             break
     if found == False:
-        print("DELETE")
-        db_cursor.execute("DELETE FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
+        print(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
+        db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
 db_connection.commit()
 
 for member in clan_info["memberList"]:
@@ -72,22 +71,19 @@ for member in clan_info["memberList"]:
     db_cursor.execute("SELECT * FROM joueurs WHERE tag_joueur = '" + member["tag"] + "'")
     dbplayer = db_cursor.fetchall()
     if dbplayer:
-        print(dbplayer[0])
         if int(member_info["clanCapitalContributions"]) != int(dbplayer[0][3]):
             update_query = "UPDATE joueurs SET contributions_joueur = %s, date_dernier_depot_joueur = %s WHERE tag_joueur = %s"
-            values = (member_info["clanCapitalContributions"], date, member["tag"])
+            values = (member_info["clanCapitalContributions"], date_insert, member["tag"])
             db_cursor.execute(update_query, values)
             # ajoute une entrer dans la table depot
-            print('UPDATE')
-            print(str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])))
+            print(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
             insert_query = "INSERT INTO depot (id_joueur, montant, date_depot) VALUES (%s, %s, %s)"
-            values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date)
+            values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date_insert)
             db_cursor.execute(insert_query, values)
     else:
         insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur) VALUES (%s, %s, %s)"
         values = (member["name"], member["tag"], member_info["clanCapitalContributions"])
-        print("ADD")
-        print(values)
+        print(member["name"] + " à intégré le clan, le " + date_insert + ".")
         db_cursor.execute(insert_query, values)
     
 

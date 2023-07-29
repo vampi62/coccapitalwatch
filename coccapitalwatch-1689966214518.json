@@ -99,7 +99,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT pseudo_joueur as pseudo, date_dernier_depot_joueur as \"date dernier depot\", contributions_joueur as \"contribution total\" FROM coc.joueurs LIMIT 50 ",
+          "rawSql": "SELECT pseudo_joueur as pseudo, date_dernier_depot_joueur as \"date dernier depot\", contributions_joueur as \"contribution total\" FROM coc.joueurs WHERE tag_joueur IS NOT NULL LIMIT 50 ",
           "refId": "A",
           "sql": {
             "columns": [
@@ -202,7 +202,7 @@
         "sortBy": [
           {
             "desc": true,
-            "displayName": "contributions_joueur"
+            "displayName": "date de depot"
           }
         ]
       },
@@ -218,7 +218,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "SELECT coc.joueurs.pseudo_joueur as pseudo, coc.depot.montant, coc.depot.date_depot as \"date de depot\" FROM coc.joueurs LEFT JOIN coc.depot ON coc.joueurs.id_joueur = coc.depot.id_joueur ORDER BY coc.depot.date_depot DESC",
+          "rawSql": "SELECT coc.joueurs.pseudo_joueur as pseudo, coc.depot.montant, coc.depot.date_depot as \"date de depot\" FROM coc.joueurs INNER JOIN coc.depot ON coc.joueurs.id_joueur = coc.depot.id_joueur ORDER BY coc.depot.date_depot DESC",
           "refId": "B",
           "sql": {
             "columns": [
