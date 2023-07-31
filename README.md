@@ -29,7 +29,7 @@ selectionner les installer pas d'embedded
 - https://dev.mysql.com/downloads/installer/
 (mysql server only --> next jusqu'a install (changer le root password))
 
-- https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/
+- https://grafana.com/docs/grafana/latest/setup-grafana/installation/windows/ (optionnel si vous utiliser le script avec discord)
 
 2) ouvrez un cmd
 installer les modules requis par python
@@ -57,15 +57,10 @@ cd C:/Téléchargements/coccapitalwatch/
 python C:/Téléchargements/coccapitalwatch/install.py
 ```
 
-- creer une tache planifier
+- installer le service ou la tache planifier
+service si vous utiliser avec discord  
 
-allez dans le planificateur de tache
-creer une nouvelle tache avec une execution régulière
-![declencheur](https://github.com/vampi62/coccapitalwatch/assets/104321401/bab9dd4c-f75e-41b3-aa35-880a9911fd0a)
-
-ajouter l'action vers le script main ! executer dans le dossier du fichier main
-![action](https://github.com/vampi62/coccapitalwatch/assets/104321401/b76b3a3d-ed74-4ee4-bbdf-bbbbd563b330)
-
+tache planifier si vous n'utilisez pas discord
 
 # linux
 ```sh
@@ -79,7 +74,7 @@ pip install mysql-connector-python
 ```sh 
 sudo apt install mariadb-server
 ```
-- un grafana pour visualiser les données
+- un grafana pour visualiser les données (optionnel si vous utiliser le script avec discord)
 ```sh
 https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/
 ```
@@ -100,19 +95,13 @@ exit
 lancer l'installation de la base (changer le répertoire si besoin)
 ```sh
 cd ~/coccapitalwatch/
-python ~/coccapitalwatch/install.py
+python ~/coccapitalwatch/install/install_db.py
 ```
 
-- installer la tache planifier
-crontab (remplacer "pi" par le nom de l'utilisateur qui stock le projet) (linux uniquement)
-```sh
-sudo crontab -e
+- installer le service ou la tache planifier
+service si vous utiliser avec discord
 
-*/5 * * * * su pi -c "python /home/pi/coccapitalwatch/main.py"
-```
-- executer : "su pi -c "python /home/pi/coccapitalwatch/main.py"
-(verification du fonctionnement du script comme vue au-dessus remplacer pi)
-
+tache planifier si vous n'utilisez pas discord
 
 # grafana
 

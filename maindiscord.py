@@ -5,15 +5,22 @@ import requests
 import time
 import asyncio
 import discord
-chemin = os.getcwd()
-
-with open(chemin + "/config.json", encoding='utf-8') as fs:
+with open(os.path.join(os.path.dirname(__file__), "config.json"), encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
       except:
         fs.close()
-        print("Erreur lors de la lecture du fichier config.json")
+        print("Erreur config.json not found")
+        exit()
+
+with open(os.path.join(os.path.dirname(__file__), "lang/" + data['lang'] + ".json"), encoding='utf-8') as fs:
+      try:
+        lang = json.load(fs) # lecture json
+        fs.close()
+      except:
+        fs.close()
+        print("Erreur lang/" + data['lang'] + ".json not found")
         exit()
 
 # Informations de connexion à la base de données MariaDB
@@ -35,9 +42,6 @@ bot = discord.Client(intents=intents)
 
 @bot.event
 async def on_ready():
-    channel = bot.get_channel(int(data['discord_channel']))
-    if channel:
-        await channel.send("Bot connecté !")
     bot.loop.create_task(insert_periodically())
 
 @bot.event
@@ -63,19 +67,19 @@ def inserthall(nbr_jeton):
     db_connection,db_cursor = connectsql()
     date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
     if not nbr_jeton.isdigit():
-        print("Erreur, le nombre de jeton doit être un nombre")
-        return ["Erreur, le nombre de jeton doit être un nombre"]
+        print(lang['error_number'])
+        return [lang['error_number']]
     try:
         insert_query = "INSERT INTO halls (somme_hall, date_hall) VALUES (%s, %s)"
         values = (nbr_jeton,date_insert)
         db_cursor.execute(insert_query, values)
         db_connection.commit()
     except:
-        print("Erreur lors de la connexion à la base de données")
-        return ["Erreur lors de la connexion à la base de données"]
-    print("donnée mise à jour avec succès !")
+        print(lang['error_db'])
+        return [lang['error_db']]
+    print(lang['updatehall'])
     db_connection.close()
-    return ["donnée mise à jour avec succès !"]
+    return [lang['updatehall']]
 
 def correspondance():
     db_connection,db_cursor = connectsql()
@@ -85,16 +89,16 @@ def correspondance():
     db_cursor.execute("SELECT somme_hall, date_hall FROM coc.halls ORDER BY date_hall DESC LIMIT 2")
     dbhall = db_cursor.fetchall()
     target_sum = dbhall[0][0] - dbhall[1][0]
-    print("somme déposée : " + str(target_sum))
-    print("date de recherche : " + str(dbhall[1][1]))
-    returnmessage.append("somme déposée : " + str(target_sum))
-    returnmessage.append("date de recherche : " + str(dbhall[1][1]))
+    print(lang["depot_hall"] + str(target_sum))
+    print(lang["depot_date"] + str(dbhall[1][1]))
+    returnmessage.append(lang["depot_hall"] + str(target_sum))
+    returnmessage.append(lang["depot_date"] + str(dbhall[1][1]))
     db_cursor.execute("SELECT id_depot, montant FROM coc.depot WHERE date_depot > '" + str(dbhall[1][1]) + "'")
     dbdepot = db_cursor.fetchall()
     for depot in dbdepot:
         numbers_list.append(depot[1])
-        print("somme déposer dans l'interval : " + str(depot[1]))
-        returnmessage.append("somme déposer dans l'interval : " + str(depot[1]))
+        print(lang["depot_interval"] + str(depot[1]))
+        returnmessage.append(lang["depot_interval"] + str(depot[1]))
     def find_combination(numbers, target):
         numbers.sort()
         combination = []
@@ -113,13 +117,13 @@ def correspondance():
         return partial_sum(0, numbers)
     result = find_combination(numbers_list, target_sum)
     if result is None:
-        print("Aucune combinaison trouvée pour atteindre la somme cible.")
-        returnmessage.append("Aucune combinaison trouvée pour atteindre la somme cible.")
+        print(lang['error_combination'])
+        returnmessage.append(lang['error_combination'])
     else:
-        print("Combinaison trouvée : " + str(result))
-        print("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
-        returnmessage.append("Combinaison trouvée : " + str(result))
-        returnmessage.append("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
+        print(lang['combination_found'] + str(result))
+        print(lang['attention'])
+        returnmessage.append(lang['combination_found'] + str(result))
+        returnmessage.append(lang['attention'])
     db_connection.close()
     return returnmessage
 
@@ -156,7 +160,7 @@ async def sync_clans():
     date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
     channel = bot.get_channel(int(data['discord_channel']))
     if not channel:
-        print("Erreur, le channel discord n'est pas valide")
+        print(lang['error_channel'])
     clan_info = get_clan_info(data['clan_tag'], data['api_key'])
     db_cursor.execute("SELECT id_joueur,pseudo_joueur,tag_joueur FROM joueurs")
     dbplayer = db_cursor.fetchall()
@@ -168,8 +172,8 @@ async def sync_clans():
                 found = True
                 break
         if found == False:
-            print(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
-            returnmessage.append(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
+            print(str(player[1]) + lang["left_clan"] + date_insert + ".")
+            returnmessage.append(str(player[1]) + lang["left_clan"] + date_insert + ".")
             db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
     db_connection.commit()
     # mettre à jour les informations des joueurs
@@ -185,26 +189,25 @@ async def sync_clans():
                 update_query = "UPDATE joueurs SET contributions_joueur = %s, date_dernier_depot_joueur = %s WHERE tag_joueur = %s"
                 values = (member_info["clanCapitalContributions"], date_insert, member["tag"])
                 db_cursor.execute(update_query, values)
-                print(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
                 insert_query = "INSERT INTO depot (id_joueur, montant, date_depot) VALUES (%s, %s, %s)"
                 values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date_insert)
                 db_cursor.execute(insert_query, values)
-                returnmessage.append(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
+                print(member["name"] + lang["depot_player_1"] + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + lang["depot_player_2"] + date_insert + ".")
+                returnmessage.append(member["name"] + lang["depot_player_1"] + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + lang["depot_player_2"] + date_insert + ".")
         else:
             insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur) VALUES (%s, %s, %s)"
             values = (member["name"], member["tag"], member_info["clanCapitalContributions"])
-            print(member["name"] + " à intégré le clan, le " + date_insert + ".")
             db_cursor.execute(insert_query, values)
-            returnmessage.append(member["name"] + " à intégré le clan, le " + date_insert + ".")
+            print(member["name"] + lang['new_player'] + date_insert + ".")
+            returnmessage.append(member["name"] + lang['new_player'] + date_insert + ".")
     db_connection.commit()
     if channel:
         for msg in returnmessage:
-            print(msg)
             await channel.send(msg)
     db_connection.close()
 
 @bot.event
 async def on_disconnect():
-    print('Connexion perdue, tentative de reconnexion...')
+    print(lang['error_disconnect'])
 
 bot.run(data['discord_token'])

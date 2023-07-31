@@ -3,15 +3,23 @@ import json
 import os
 import requests
 import time
-chemin = os.getcwd()
 date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
-with open(chemin + "/config.json", encoding='utf-8') as fs:
+with open(os.path.join(os.path.dirname(__file__), "config.json"), encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
       except:
         fs.close()
-        print("Erreur lors de la lecture du fichier config.json")
+        print("Erreur config.json not found")
+        exit()
+
+with open(os.path.join(os.path.dirname(__file__), "lang/" + data['lang'] + ".json"), encoding='utf-8') as fs:
+      try:
+        lang = json.load(fs) # lecture json
+        fs.close()
+      except:
+        fs.close()
+        print("Erreur lang/" + data['lang'] + ".json not found")
         exit()
 
 # Informations de connexion à la base de données MariaDB
@@ -59,7 +67,7 @@ for player in dbplayer:
             found = True
             break
     if found == False:
-        print(str(player[1]) + " a quitté le clan, le " + date_insert + ".")
+        print(str(player[1]) + lang["left_clan"] + date_insert + ".")
         db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
 db_connection.commit()
 
@@ -76,14 +84,14 @@ for member in clan_info["memberList"]:
             values = (member_info["clanCapitalContributions"], date_insert, member["tag"])
             db_cursor.execute(update_query, values)
             # ajoute une entrer dans la table depot
-            print(member["name"] + " a déposé " + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + " jetons, le " + date_insert + ".")
+            print(member["name"] + lang["depot_player_1"] + str(int(member_info["clanCapitalContributions"])-int(dbplayer[0][3])) + lang["depot_player_2"] + date_insert + ".")
             insert_query = "INSERT INTO depot (id_joueur, montant, date_depot) VALUES (%s, %s, %s)"
             values = (dbplayer[0][0], int(member_info["clanCapitalContributions"])-int(dbplayer[0][3]), date_insert)
             db_cursor.execute(insert_query, values)
     else:
         insert_query = "INSERT INTO joueurs (pseudo_joueur, tag_joueur, contributions_joueur) VALUES (%s, %s, %s)"
         values = (member["name"], member["tag"], member_info["clanCapitalContributions"])
-        print(member["name"] + " à intégré le clan, le " + date_insert + ".")
+        print(member["name"] + lang['new_player'] + date_insert + ".")
         db_cursor.execute(insert_query, values)
     
 

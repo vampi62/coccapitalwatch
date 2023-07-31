@@ -2,17 +2,23 @@ import mysql.connector
 import json
 import os
 import requests
-chemin = os.getcwd()
-with open(chemin + "/config.json", encoding='utf-8') as fs:
+with open(os.path.join(os.path.dirname(__file__), "../config.json"), encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
       except:
         fs.close()
-        print("Erreur lors de la lecture du fichier config.json")
-        input("Appuyez sur une touche pour quitter...")
+        print("Erreur config.json not found")
         exit()
 
+with open(os.path.join(os.path.dirname(__file__), "../lang/" + data['lang'] + ".json"), encoding='utf-8') as fs:
+      try:
+        lang = json.load(fs) # lecture json
+        fs.close()
+      except:
+        fs.close()
+        print("Erreur lang/" + data['lang'] + ".json not found")
+        exit()
 db_config = {
     "user": data['bduser'],
     "port": data['bdport'],
@@ -31,12 +37,12 @@ try:
     }
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
-        print("Erreur lors de la connexion à l'api clash of clans")
-        input("Appuyez sur une touche pour quitter...")
+        print(lang["install_erreur_api"])
+        input(lang["input_exit"])
         exit()
 except:
-    print("Erreur lors de la connexion à l'api clash of clans")
-    input("Appuyez sur une touche pour quitter...")
+    print(lang["install_erreur_api"])
+    input(lang["input_exit"])
     exit()
 
 # test la connexion a la base mysql
@@ -46,11 +52,11 @@ try:
     db_cursor.execute(open("coc.sql", "r").read())
     db_connection.close()
 except:
-    print("Erreur lors de la connexion à la base de données")
-    input("Appuyez sur une touche pour quitter...")
+    print(lang["error_db"])
+    input(lang["input_exit"])
     exit()
 
 
-print("Installation terminée avec succès !")
-input("Appuyez sur une touche pour quitter...")
+print(lang["install_ok"])
+input(lang["input_exit"])
 exit()

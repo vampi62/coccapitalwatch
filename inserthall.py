@@ -2,20 +2,27 @@ import mysql.connector
 import json
 import os
 import time
-chemin = os.getcwd()
 date = str(time.strftime('%Y-%m-%d %H:%M:%S'))
 target_sum = 0
 numbers_list = []
-with open(chemin + "/config.json", encoding='utf-8') as fs:
+with open(os.path.join(os.path.dirname(__file__), "config.json"), encoding='utf-8') as fs:
       try:
         data = json.load(fs) # lecture json
         fs.close()
       except:
         fs.close()
-        print("Erreur lors de la lecture du fichier config.json")
-        input("Appuyez sur une touche pour quitter...")
+        print("Erreur config.json not found")
         exit()
 
+with open(os.path.join(os.path.dirname(__file__), "lang/" + data['lang'] + ".json"), encoding='utf-8') as fs:
+      try:
+        lang = json.load(fs) # lecture json
+        fs.close()
+      except:
+        fs.close()
+        print("Erreur lang/" + data['lang'] + ".json not found")
+        exit()
+        
 db_config = {
     "user": data['bduser'],
     "port": data['bdport'],
@@ -28,13 +35,13 @@ def correspondance():
     db_cursor.execute("SELECT somme_hall, date_hall FROM coc.halls ORDER BY date_hall DESC LIMIT 2")
     dbhall = db_cursor.fetchall()
     target_sum = dbhall[0][0] - dbhall[1][0]
-    print("somme déposée : " + str(target_sum))
-    print("date de recherche : " + str(dbhall[1][1]))
+    print(lang["depot_hall"] + str(target_sum))
+    print(lang["depot_date"] + str(dbhall[1][1]))
     db_cursor.execute("SELECT id_depot, montant FROM coc.depot WHERE date_depot > '" + str(dbhall[1][1]) + "'")
     dbdepot = db_cursor.fetchall()
     for depot in dbdepot:
         numbers_list.append(depot[1])
-        print("somme déposer dans l'interval : " + str(depot[1]))
+        print(lang["depot_interval"] + str(depot[1]))
 
 
 
@@ -71,19 +78,19 @@ def correspondance():
     result = find_combination(numbers_list, target_sum)
 
     if result is None:
-        print("Aucune combinaison trouvée pour atteindre la somme cible.")
+        print(lang['error_combination'])
     else:
-        print("Combinaison trouvée :", result)
-    print("attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.")
-    input("Appuyez sur une touche pour quitter...")
+        print(lang['combination_found'] + str(result))
+        print(lang['attention'])
+    input(lang["input_exit"])
 
 
 
-nbr_jeton = input("indique le nombre de jetons dans le hall de clan : ")
+nbr_jeton = input(lang["input_new_hall"])
 
 if not nbr_jeton.isdigit():
-    print("Erreur, le nombre de jeton doit être un nombre")
-    input("Appuyez sur une touche pour quitter...")
+    print(lang['error_number'])
+    input(lang["input_exit"])
     exit()
 
 try:
@@ -95,11 +102,11 @@ try:
     db_cursor.execute(insert_query, values)
     db_connection.commit()
 except:
-    print("Erreur lors de la connexion à la base de données")
-    input("Appuyez sur une touche pour quitter...")
+    print(lang['error_db'])
+    input(lang["input_exit"])
     exit()
-print("donnée mise à jour avec succès !")
+print(lang['updatehall'])
 correspondance()
-input("Appuyez sur une touche pour quitter...")
+input(lang["input_exit"])
 exit()
 

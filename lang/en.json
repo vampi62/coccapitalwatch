@@ -1,0 +1,21 @@
+{
+    "error_number": "Error, the number of tokens must be a positive integer.",
+    "error_db": "Error connecting to the database.",
+    "updatehall": "Data updated successfully!",
+    "error_combination": "No combination found to reach the target sum.",
+    "combination_found": "Combination found: ",
+    "attention": "Attention: small round sums may match; for example, 450 and 550 could be output by the program, but it could represent a total of 1000.",
+    "error_channel": "Error, the Discord channel is not valid.",
+    "error_disconnect": "Connection lost, attempting to reconnect...",
+    "new_player": " joined the clan on ",
+    "depot_player_1": " deposited ",
+    "depot_player_2": " tokens on ",
+    "left_clan": " left the clan on ",
+    "depot_hall": "Deposited sum: ",
+    "depot_date": "Search date: ",
+    "depot_interval": "Sum deposited within the interval: ",
+    "input_exit": "Press any key to exit...",
+    "input_new_hall": "Enter the number of tokens in the clan hall: ",
+    "install_erreur_api": "Error connecting to the Clash of Clans API.",
+    "install_ok": "Installation completed successfully!"
+}

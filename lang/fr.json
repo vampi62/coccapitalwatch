@@ -1,0 +1,21 @@
+{
+    "error_number" : "Erreur, le nombre de jeton doit être un nombre entier positif",
+    "error_db" : "Erreur lors de la connexion à la base de données",
+    "updatehall" : "donnée mise à jour avec succès !",
+    "error_combination" : "Aucune combinaison trouvée pour atteindre la somme cible.",
+    "combination_found" : "Combinaison trouvée : ",
+    "attention" : "attention : les petites sommes rondes peuvent correspondre, par exemple un 450 et un 550 peuvent être sorti par le programme alors qu'il pourrait s'agir d'un 1000.",
+    "error_channel" : "Erreur, le channel discord n'est pas valide",
+    "error_disconnect" : "Connexion perdue, tentative de reconnexion...",
+    "new_player" : " à intégré le clan, le ",
+    "depot_player_1" : " a déposé ",
+    "depot_player_2" : " jetons, le ",
+    "left_clan" : " a quitté le clan, le ",
+    "depot_hall" : "somme déposée : ",
+    "depot_date" : "date de recherche : ",
+    "depot_interval" : "somme déposer dans l'interval : ",
+    "input_exit" : "Appuyez sur une touche pour quitter...",
+    "input_new_hall" : "indique le nombre de jetons dans le hall de clan : ",
+    "install_erreur_api" : "Erreur lors de la connexion à l'api clash of clans",
+    "install_ok" : "Installation terminée avec succès !"
+}
