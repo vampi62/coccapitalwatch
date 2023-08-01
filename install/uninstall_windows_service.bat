@@ -1,7 +1,7 @@
 @echo off
 
 REM Remplacez cette valeur par le nom du service que vous souhaitez supprimer
-set "serviceName=coccapitalwatch"
+set serviceName="coccapitalwatch"
 
 REM Arrêtez d'abord le service avant de le supprimer (facultatif)
 sc stop "%serviceName%"
