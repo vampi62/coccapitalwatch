@@ -17,7 +17,6 @@ if not exist %python_script% (
     exit /b
 )
 
-pip install discord
 pip install mysql-connector-python
 pip install requests
 

@@ -57,7 +57,7 @@ def get_member_info(player_tag, api_key):
 
 
 clan_info = get_clan_info(data['clan_tag'], data['api_key'])
-db_cursor.execute("SELECT id_joueur,pseudo_joueur,tag_joueur FROM joueurs")
+db_cursor.execute("SELECT id_joueur,pseudo_joueur,tag_joueur FROM joueurs WHERE tag_joueur IS NOT NULL")
 dbplayer = db_cursor.fetchall()
 # supprimer les joueurs qui ne sont plus dans le clan
 for player in dbplayer:
