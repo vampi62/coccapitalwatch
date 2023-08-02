@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/sh
+sudo pip install discord
+sudo pip install mysql-connector-python
+sudo pip install requests
 
 # Chemin complet vers le fichier Python # repertoire du fichier bash
 repertoire_script=$(dirname "$(readlink -f "$0")")
@@ -11,7 +14,7 @@ Description=Mon service Python
 
 [Service]
 Type=simple
-ExecStart=$chemin_python
+ExecStart=python $chemin_python
 Restart=always
 
 [Install]

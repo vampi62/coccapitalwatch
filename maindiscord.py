@@ -33,8 +33,7 @@ db_config = {
 }
 def connectsql():
     db_connection = mysql.connector.connect(**db_config)
-    db_cursor = db_connection.cursor()
-    return db_connection,db_cursor
+    return db_connection
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -64,7 +63,8 @@ async def sendmessage(message,returnmessage):
         await message.channel.send(msg)
 
 def inserthall(nbr_jeton):
-    db_connection,db_cursor = connectsql()
+    db_connection = connectsql()
+    db_cursor = db_connection.cursor()
     date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
     if not nbr_jeton.isdigit():
         print(lang['error_number'])
@@ -82,7 +82,8 @@ def inserthall(nbr_jeton):
     return [lang['updatehall']]
 
 def correspondance():
-    db_connection,db_cursor = connectsql()
+    db_connection = connectsql()
+    db_cursor = db_connection.cursor()
     returnmessage = []
     target_sum = 0
     numbers_list = []
@@ -155,7 +156,8 @@ async def insert_periodically():
         await asyncio.sleep(120)
 
 async def sync_clans():
-    db_connection,db_cursor = connectsql()
+    db_connection = connectsql()
+    db_cursor = db_connection.cursor()
     returnmessage = []
     date_insert = str(time.strftime('%Y-%m-%d %H:%M:%S'))
     channel = bot.get_channel(int(data['discord_channel']))
@@ -174,7 +176,7 @@ async def sync_clans():
         if found == False:
             print(str(player[1]) + lang["left_clan"] + date_insert + ".")
             returnmessage.append(str(player[1]) + lang["left_clan"] + date_insert + ".")
-            db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
+            db_cursor.execute("UPDATE joueurs SET tag_joueur = NULL WHERE tag_joueur = '" + str(player[2]) + "'")
     db_connection.commit()
     # mettre à jour les informations des joueurs
     for member in clan_info["memberList"]:

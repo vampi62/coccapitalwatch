@@ -68,7 +68,7 @@ for player in dbplayer:
             break
     if found == False:
         print(str(player[1]) + lang["left_clan"] + date_insert + ".")
-        db_cursor.execute("UPDATE SET tag_joueur = NULL FROM joueurs WHERE tag_joueur = '" + str(player[2]) + "'")
+        db_cursor.execute("UPDATE joueurs SET tag_joueur = NULL WHERE tag_joueur = '" + str(player[2]) + "'")
 db_connection.commit()
 
 for member in clan_info["memberList"]:

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Supprimez la tâche Cron pour exécuter le script Python toutes les 5 minutes
 repertoire_script=$(dirname "$(readlink -f "$0")")

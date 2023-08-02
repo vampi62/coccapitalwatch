@@ -20,6 +20,10 @@ if not exist %python_script% (
     exit /b
 )
 
+pip install discord
+pip install mysql-connector-python
+pip install requests
+
 sc create "%serviceName%" binPath= "%python_executable% %python_script%" start= auto
 
 echo Service cree avec succes.

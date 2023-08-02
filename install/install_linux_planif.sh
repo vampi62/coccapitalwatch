@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/sh
+sudo pip install discord
+sudo pip install mysql-connector-python
+sudo pip install requests
 
 # Obtenez les tâches Cron actuelles
 crontab -l > mycron
