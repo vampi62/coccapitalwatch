@@ -98,8 +98,8 @@ def correspondance():
     dbdepot = db_cursor.fetchall()
     for depot in dbdepot:
         numbers_list.append(depot[1])
-        print(lang["depot_interval"] + str(depot[1]))
-        returnmessage.append(lang["depot_interval"] + str(depot[1]))
+    print(lang["depot_interval"] + str(numbers_list))
+    returnmessage.append(lang["depot_interval"] + str(numbers_list))
     def find_combination(numbers, target):
         numbers.sort()
         combination = []
@@ -178,12 +178,16 @@ async def sync_clans():
             returnmessage.append(str(player[1]) + lang["left_clan"] + date_insert + ".")
             db_cursor.execute("UPDATE joueurs SET tag_joueur = NULL WHERE tag_joueur = '" + str(player[2]) + "'")
     db_connection.commit()
+    # test - permet a discord de rester connecté
+    await asyncio.sleep(1)
     # mettre à jour les informations des joueurs
     for member in clan_info["memberList"]:
         member_info = get_member_info(member["tag"], data['api_key'])
         #verifier si le joueur existe déjà dans la base de données
         #si oui, mettre à jour les informations
         #si non, l'ajouter
+        # test - permet a discord de rester connecté
+        await asyncio.sleep(0.2)
         db_cursor.execute("SELECT * FROM joueurs WHERE tag_joueur = '" + member["tag"] + "'")
         dbplayer = db_cursor.fetchall()
         if dbplayer:
@@ -203,6 +207,8 @@ async def sync_clans():
             print(member["name"] + lang['new_player'] + date_insert + ".")
             returnmessage.append(member["name"] + lang['new_player'] + date_insert + ".")
     db_connection.commit()
+    # test - permet a discord de rester connecté
+    await asyncio.sleep(1)
     if channel:
         for msg in returnmessage:
             await channel.send(msg)

@@ -41,7 +41,7 @@ def correspondance():
     dbdepot = db_cursor.fetchall()
     for depot in dbdepot:
         numbers_list.append(depot[1])
-        print(lang["depot_interval"] + str(depot[1]))
+    print(lang["depot_interval"] + str(numbers_list))
 
 
 
