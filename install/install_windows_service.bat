@@ -26,4 +26,6 @@ pip install requests
 
 sc create "%serviceName%" binPath= "%python_executable% %python_script%" start= auto
 
+schtasks /Create /TN "coccapitalwatchrestart" /TR "sc restart %ServiceName%" /SC DAILY /ST 00:00:00 /F
+
 echo Service cree avec succes.

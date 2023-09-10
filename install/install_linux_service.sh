@@ -29,5 +29,11 @@ sudo systemctl enable coccapitalwatch
 # Démarrer le service
 sudo systemctl start coccapitalwatch
 
+# Ajouter une tâche cron pour redémarrer le service toutes les jours
+crontab -l > mycron
+echo "12 3 * * * sudo service coccapitalwatch restart" >> mycron
+crontab mycron
+rm mycron
+
 # Vérifier le statut du service
 sudo systemctl status coccapitalwatch
